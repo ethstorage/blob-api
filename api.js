@@ -24,6 +24,12 @@ app.post('/generate', async function (req, res) {
     res.json(result);
 });
 
+app.post('/file', async function (req, res) {
+    const result = generateByFile(req.body.file);
+    res.status(200);
+    res.json(result);
+});
+
 app.get('/test', async function (req, res) {
     res.status(200);
     res.json({data:'success'});
@@ -41,6 +47,7 @@ const {
 } = require("c-kzg");
 const {resolve} = require("path");
 const {ethers} = require("ethers");
+const {getBlobs} = require("@ethereumjs/util");
 
 const SETUP_FILE_PATH = resolve(__dirname, "lib", "devnet7.txt");
 loadTrustedSetup(SETUP_FILE_PATH);
@@ -80,6 +87,26 @@ function generateBlobsData(blobs) {
         } else if (ethers.isHexString(blobs)) {
             const blob = ethers.getBytes(blobs);
             const {commitmentHash, commitment, proof} = generateBlob(blob);
+            versionedHashes.push(commitmentHash);
+            commitments.push(commitment);
+            proofs.push(proof);
+        }
+    } catch (e) {}
+    return {
+        versionedHashes,
+        commitments,
+        proofs
+    }
+}
+
+function generateByFile(fileData) {
+    const versionedHashes = [];
+    const commitments = [];
+    const proofs = [];
+    try {
+        let blobs = getBlobs(fileData);
+        for (let i = 0; i < blobs.length; i++) {
+            const {commitmentHash, commitment, proof} = generateBlob(blobs[i]);
             versionedHashes.push(commitmentHash);
             commitments.push(commitment);
             proofs.push(proof);
