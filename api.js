@@ -49,7 +49,7 @@ const {resolve} = require("path");
 const {ethers} = require("ethers");
 const {getBlobs} = require("@ethereumjs/util");
 
-const SETUP_FILE_PATH = resolve(__dirname, "lib", "devnet7.txt");
+const SETUP_FILE_PATH = resolve(__dirname, "lib", "trusted_setup.txt");
 loadTrustedSetup(SETUP_FILE_PATH);
 
 function computeVersionedHash(commitment, blobCommitmentVersion) {
