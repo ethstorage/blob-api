@@ -36,7 +36,7 @@ app.get('/test', async function (req, res) {
 });
 
 // 启动
-app.listen(3000, '0.0.0.0', () => {
+app.listen(3001, '0.0.0.0', () => {
     console.log('Express server listening on port ');
 });
 
